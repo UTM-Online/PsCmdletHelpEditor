@@ -8,7 +8,7 @@ using CookComputing.XmlRpc;
 
 namespace CmdletHelpEditor.API.MetaWeblog {
     public class Blogger {
-        String _blogId;
+        String blogId;
         readonly String _userName;
         readonly SecureString _password;
         readonly IMetaWeblogProvider metaWeblogProvider;
@@ -25,46 +25,26 @@ namespace CmdletHelpEditor.API.MetaWeblog {
             clientProtocol.NonStandard = XmlRpcNonStandard.All;
         }
 
-        public void SetBlog(String blogId) {
-            _blogId = blogId;
+        public void SetBlog(String blog) {
+            this.blogId = blog;
         }
         public IEnumerable<BlogInfo> GetUsersBlogs() {
-            try {
-                return metaWeblogProvider.GetUsersBlogs(String.Empty, _userName, Crypt.SecureStringToString(_password));
-            } catch (Exception e) {
-                Utils.MsgBox("Error", e.Message);
-            }
-            return null;
+            return metaWeblogProvider.GetUsersBlogs(String.Empty, _userName, Crypt.SecureStringToString(_password));
         }
         public List<Post> GetRecentPosts(Int32 postCount = 5) {
-            try {
-                return new List<Post>(metaWeblogProvider.GetRecentPosts(_blogId, _userName, Crypt.SecureStringToString(_password), postCount));
-            } catch (Exception e) {
-                Utils.MsgBox("Error", e.Message);
-            }
-            return null;
+            return new List<Post>(metaWeblogProvider.GetRecentPosts(blogId, _userName, Crypt.SecureStringToString(_password), postCount));
         }
         public Post GetPost(String postId) {
-            try {
-                return metaWeblogProvider.GetPost(postId, _userName, Crypt.SecureStringToString(_password));
-            } catch (Exception e) {
-                Utils.MsgBox("Error", e.Message);
-            }
-            return null;
+            return metaWeblogProvider.GetPost(postId, _userName, Crypt.SecureStringToString(_password));
         }
         public String AddPost(Post post, Boolean publish = true) {
-            return metaWeblogProvider.AddPost(_blogId, _userName, Crypt.SecureStringToString(_password), post, publish);
+            return metaWeblogProvider.AddPost(blogId, _userName, Crypt.SecureStringToString(_password), post, publish);
         }
         public Boolean UpdatePost(Post post, Boolean publish = true) {
             return metaWeblogProvider.UpdatePost(post.PostId, _userName, Crypt.SecureStringToString(_password), post, publish);
         }
         public Boolean DeletePost(String postId, Boolean publish = false) {
-            try {
-                return metaWeblogProvider.DeletePost(String.Empty, postId, _userName, Crypt.SecureStringToString(_password), publish);
-            } catch (Exception e) {
-                Utils.MsgBox("Error", e.Message);
-            }
-            return false;
+            return metaWeblogProvider.DeletePost(String.Empty, postId, _userName, Crypt.SecureStringToString(_password), publish);
         }
     }
 }
